@@ -1,0 +1,52 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg fixed-top navbar-light" id="main-navbar">
+    <div class="container">
+        <a class="navbar-brand pr-5" style="border-right: 1px solid #efefef;" href="{% url 'main' %}">
+            <img src="{% static "img/instagram.png" %}" height="45" class="d-inline-block align-top"/>
+        </a>
+    {% include 'partial/search.html' %}
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="form-inline my-2 my-lg-0" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+            {% if request.user.is_authenticated %}
+                <li class="nav-item ">
+                    {% if request.user.avatar %}
+                        <a href="{% url 'profile' request.user.pk %}">
+                            <img src="{{ request.user.avatar.url }}" height="35" width="38" class="d-inline-block align-top rounded-circle"/>
+                        </a>    
+                    {% else %}
+                        <a href="{% url 'profile' request.user.pk %}">
+                        <img src="{% static 'img/default-profile.png' %}" height="35" class="d-inline-block align-top rounded-circle"/>
+                        </a>
+                    {% endif %}
+                </li>
+
+
+                <li class="nav-item nav-icon">
+                    <a href="{% url 'add_post' %}" >
+                        <i class="fas fa-plus"></i>
+                        <span class="d-sm-block d-md-none d-xl-none">Add Post</span>
+                    </a>
+                </li>
+
+                <li class="nav-item nav-icon">
+                    <a href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="d-sm-block d-md-none d-xl-none">Log Out</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Регистрация</a>
+                </li>
+            {% endif %}
+
+            </ul>
+        </div>
+    </div>
+</nav>

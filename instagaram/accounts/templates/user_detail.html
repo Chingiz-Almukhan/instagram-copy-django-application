@@ -1,45 +1,86 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 
-
-
-{% block title %}Пользователь{% endblock %}
-
-
-
-{% block menu %}
-
-    <li><a href="{% url 'change' user_obj.pk %}">Редактировать</a></li>
-
-    <li><a href="#">Смена пароля</a></li>
-
+{% block title %}
+    <title>@{{ user_obj.username }}</title>
 {% endblock %}
 
+{% block container %}
+
+    <div class="container mb-5" style="margin-top: 8em;">
+        <div class="row">
+            <div class="col-sm-4 d-flex justify-content-center">
+                {% if user.obj.avatar %}
+                <img src="{{ user_obj.avatar.url }}" alt="@{{ user_obj.username }}" class="rounded-circle" width="160px"
+                     height="160px"/>
+                {% else %}
+                <img src="{% static 'img/default-profile.png' %}" alt="@{{ user_obj.username }}" class="rounded-circle" width="160px"
+                     height="160px"/>
+                {% endif %}
+            </div>
+            <div class="col-sm-8">
+                <h2 style="font-weight: 100;">
+                    {{ user_obj.username }}
+                    {% if user_obj == request.user %}
+                        <a
+                                href="{% url 'edit_profile' user_obj.pk %}"
+                                class="ml-5 btn btn-outline-secondary"
+                        >
+                            Edit profile
+                        </a>
+                    {% elif request.user not in user_obj.subscriptions.all %}
 
 
-{% block content %}
+                        <a href="{% url 'subscribe' user_obj.pk %}"
+                           type="submit"
+                           class="ml-5 btn btn-outline-secondary"
+                        >
+                            Подписаться
+                        </a>
+                    {% else %}
+                            <a href="{% url 'subscribe' user_obj.pk %}"
+                                    type="submit"
+                                    class="ml-5 btn btn-outline-secondary"
+                            >
+                                Отменить подписку
+                            </a>
+                    {% endif %}
+                </h2>
+                <div class="row mt-2" style="font-size: 1.2em">
+                    <div class="col-sm-4">
+                        <b>{{ posts.count }}</b> Публикации
+                    </div>
 
-    <h1>Личная страница пользователя {{ user_obj.get_full_name|default:user_obj.username }}</h1>
+                    <div class="col-sm-4">
+                        <a href="{% url 'subscribers' user_obj.pk %}" class="text-decoration-none" style="color: black"><b>{{ user_obj.subscriptions.count }}</b> Подписчики</a>
+                    </div>
 
-    {% if user_obj.profile.avatar %}
+                    <div class="col-sm-4">
+                        <a href="{% url 'follows' user_obj.pk %}" class="text-decoration-none" style="color: black"><b>{{ user_obj.subscribers.count}}</b> Подписки</a>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-12">
+                        <p>{{ user_obj.biography }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <img class="avatar" src="{{ user_obj.profile.avatar.url }}" width="250" height="250" alt="user picture">
+    <hr>
 
-    {% endif %}
-
-    <p>Имя пользователя: {{ user_obj.username }}</p>
-
-    <p>Имя: {{ user_obj.first_name }}</p>
-
-    <p>Фамилия: {{ user_obj.last_name }}</p>
-
-    <p>Дата рождения: {{ user_obj.profile.birth_date|date:'d.m.Y' }}</p>
-
-    <p>Почта: {{ user_obj.email }}</p>
-
-
-
-    <h2 class="text-center clear">Избранные публикации:</h2>
-
-    {% include 'partial/article_list.html' %}
+    <div class="container" id="user-posts">
+        <div class="row mt-3">
+            {% for post in posts %}
+                <div class="col-sm-4 pt-5 pb-5 pr-5 pl-5 d-flex justify-content-center align-items-center">
+                    <a href="{% url 'post' post.id %}" class="border">
+                        <img src="{{ post.image.url }}" alt="{{ post.description }}" height="272" width="272"
+                             class="img-fluid"/>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 
 {% endblock %}

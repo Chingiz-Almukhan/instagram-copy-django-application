@@ -1,17 +1,18 @@
-{% extends 'base.html' %}
+{% extends 'partial/login_base.html' %}
 {% load static %}
 {% load django_bootstrap5 %}
 
-{% block content %}
+{% block container %}
     <form action="" method="POST">
         <div class="form">
             {% csrf_token %}
-
             {% bootstrap_form form %}
-
-            {% bootstrap_button button_type="submit" content='Войти' %}
+            <button type="submit" class="btn btn-outline-info btn-block mt-5"><i class="lead">Войти</i></button>
         </div>
     </form>
+    <div class="mx-auto mt-1" style="width: 300px;">
+		<p>Не зарегистрированы? <a href="{% url "register" %}">Создать профиль</a></p>
+	</div>
 
 {% endblock %}
 

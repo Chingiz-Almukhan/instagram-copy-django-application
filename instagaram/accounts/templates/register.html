@@ -1,16 +1,20 @@
-{% extends 'base.html' %}
+{% extends "partial/login_base.html" %}
 {% load static %}
 {% load django_bootstrap5 %}
 
-{% block content %}
-    <form action="{% url 'register' %}" method="POST">
+{% block head_content %}
+    <title>{{ user.username }}</title>
+{% endblock %}
+
+{% block container %}
+    <form action="{% url 'register' %}" method="POST" enctype="multipart/form-data">
         <div class="form">
             {% csrf_token %}
-
             {% bootstrap_form form %}
-
             {% bootstrap_button button_type="submit" content='Зарегистрироваться' %}
         </div>
     </form>
+
+
 
 {% endblock %}
