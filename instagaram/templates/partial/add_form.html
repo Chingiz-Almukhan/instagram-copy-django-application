@@ -1,0 +1,14 @@
+{% load django_bootstrap5 %}
+
+
+<div>
+    <div class="form-outline">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+    </div>
+    <div class="col text-center">
+        <button type="submit" class="btn  btn-primary mt-4">{{ button_text }}</button>
+        <a href="{% url 'main' %}" type="submit" class="btn btn-warning mt-4">Вернуться на
+            главную</a>
+    </div>
+</div>

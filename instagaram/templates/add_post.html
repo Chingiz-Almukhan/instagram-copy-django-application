@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Add</title>
+{% endblock %}
+
+
+{% block container %}
+    <div class="row justify-content-md-center">
+            <div class="col-6 pt-3 pb-3" id="profile-box">
+                <h4 class="text-center mt-5 pb-3">Добавить публикацию</h4>
+                <form class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2"
+                      action="{% url 'add_post' %}" method="POST" enctype="multipart/form-data">
+                    {% include 'partial/add_form.html' with button_text='Добавить' %}
+                </form>
+            </div>
+    </div>
+{% endblock %}

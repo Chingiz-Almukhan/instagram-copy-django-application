@@ -1,0 +1,56 @@
+{% load django_bootstrap5 %}
+<div class="col-sm-12 col-md-8 offset-md-2 mb-5 mt-5 p-0 post-container">
+    <a href="{% url 'profile' post.author_id %}" style='color: inherit;text-decoration: inherit;'>
+        <div class="media pt-3 pl-3 pb-1">
+            <img class="mr-3 rounded-circle" height="35" width="38" src="{{ post.author.avatar.url }}"
+                 alt="{{ post.author.username }}">
+            <div class="media-body">
+                <p style="margin-top: 5px;">{{ post.author.username }}</p>
+            </div>
+        </div>
+    </a>
+    <a href="{% url 'post' post.id %}">
+        <img style="width: 100%;" src="{{ post.image.url }}" alt="{{ post.image }}">
+    </a>
+    {% if request.user not in post.user_likes.all %}
+        <p class="mt-1 ml-2">
+            <a href="{% url 'like' post.id %}" class="text-decoration-none" style="color: #000; font-size: 20px;">
+                <i class="far fa-heart"></i>
+            </a><b>{{ post.user_likes.all.count }} Отметок "Нравится"</b>
+        </p>
+    {% else %}
+        <p class="mt-1 ml-2">
+            <a href="{% url 'like' post.id %}" class="text-decoration-none" style="color: #000; font-size: 20px;">
+                <i class="bi bi-heart-fill"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" fill="currentColor"
+                     class="bi bi-heart-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                </svg>
+            </a><b>{{ post.user_likes.all.count }} Отметок "Нравится"</b>
+        </p>
+    {% endif %}
+    <p class=" ml-1 mr-1 mb-2">
+        <b> {{ post.author.username }}</b> <small class="text-break">{{ post.description }} </small>
+    </p>
+    {% for comment in post.comments.all %}
+    <p class=" ml-1 mr-1 mb-2">
+        <b> {{ comment.author.username }}</b> <small class="text-break">{{ comment.text }} </small>
+    </p>
+    {% endfor %}
+    <p class=" ml-1 mr-1 mb-2">
+        <form action="{% url 'comment' post.pk %}" method="post">
+            {% csrf_token %}
+            <div class="input-group border-0 shadow-none ml-2 mr-2" style="width: auto" >
+            <div class="form-control" style="background-color: white; height: 50px">
+                {% bootstrap_form comment_form %}
+            </div>
+            <div class="border-0 shadow-none input-group-append" style="background-color: white; height: 50px">
+                {% bootstrap_button button_type='submit' content='Отправить'%}
+            </div>
+            </div>
+
+        </form>
+    </p>
+
+</div>

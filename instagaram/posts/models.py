@@ -7,6 +7,7 @@ class Post(models.Model):
     image = models.ImageField(verbose_name='Фото', null=False, blank=False, upload_to='posts')
     author = models.ForeignKey(verbose_name='Автор', to=get_user_model(), related_name='posts', null=False, blank=False,
                                on_delete=models.CASCADE)
+    created_at = models.DateField(verbose_name='Дата публикации', auto_now_add=True)
 
 
 class Comment(models.Model):
