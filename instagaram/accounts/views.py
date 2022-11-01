@@ -29,9 +29,11 @@ class LoginView(TemplateView):
         password = form.cleaned_data.get('password')
         if '@' not in form.cleaned_data.get('email'):
             username = form.cleaned_data.get('email')
-            email = Account.objects.filter(username=username).values('email')[0]
-            email_str = email.get('email')
-            user = authenticate(request, email=email_str, password=password)
+            email = Account.objects.filter(username=username).values('email')
+            if len(email) == 0:
+                return redirect('login')
+            email_str = email[0]
+            user = authenticate(request, email=email_str.get('email'), password=password)
             login(request, user)
             return redirect('main')
         email = form.cleaned_data.get('email')
