@@ -16,16 +16,4 @@ urlpatterns = [
     path('post/like/<int:pk>', LikeAddView.as_view(), name='like'),
     path('post/comment/<int:pk>', CommentAddView.as_view(), name='comment'),
     path('search/', search, name='search')
-
-    # path(
-    #     route='posts/new/',
-    #     view=views.CreatePostView.as_view(),
-    #     name='create_post'
-    # ),
-    #
-    # path(
-    #     route='posts/<int:post_id>/',
-    #     view=login_required(views.PostDetailView.as_view()),
-    #     name='detail'
-    # ),
 ]

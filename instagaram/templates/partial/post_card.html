@@ -35,7 +35,7 @@
     </p>
     {% for comment in post.comments.all %}
     <p class=" ml-1 mr-1 mb-2">
-        <b> {{ comment.author.username }}</b> <small class="text-break">{{ comment.text }} </small>
+        <a href="{% url 'profile' comment.author.id %}" class="text-decoration-none" style="color: black"><b> {{ comment.author.username }}</b></a> <small class="text-break">{{ comment.text }} </small>
     </p>
     {% endfor %}
     <p class=" ml-1 mr-1 mb-2">

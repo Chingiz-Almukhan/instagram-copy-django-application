@@ -1,9 +1,5 @@
-from urllib.parse import urlencode
-
 from django.db.models import Q
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, FormView
-
 from accounts.models import Account
 from posts.forms import SearchForm
 
