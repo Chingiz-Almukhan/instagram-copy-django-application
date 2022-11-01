@@ -1,11 +1,15 @@
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
+from django.views import View
 from django.views.generic import TemplateView, CreateView, DetailView, UpdateView
 
 from accounts.forms import LoginForm, CustomUserCreationForm, UserChangeForm
+from accounts.models import Account
+from posts.forms import SearchForm
+from posts.models import Post
 
 
 class LoginView(TemplateView):
@@ -32,12 +36,12 @@ class LoginView(TemplateView):
         login(request, user)
         if next:
             return redirect(next)
-        return redirect('index')
+        return redirect('main')
 
 
 def logout_view(request):
     logout(request)
-    return redirect('index')
+    return redirect('main')
 
 
 class RegisterView(CreateView):
@@ -46,11 +50,11 @@ class RegisterView(CreateView):
     success_url = '/'
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('index')
+            return redirect('main')
         context = {}
         context['form'] = form
         return self.render_to_response(context)
@@ -60,18 +64,14 @@ class ProfileView(LoginRequiredMixin, DetailView):
     model = get_user_model()
     template_name = 'user_detail.html'
     context_object_name = 'user_obj'
-    paginate_related_by = 5
-    paginate_related_orphans = 0
 
     def get_context_data(self, **kwargs):
-        articles = self.object.articles.order_by('-created_at')
-        paginator = Paginator(articles, self.paginate_related_by, orphans=self.paginate_related_orphans)
-        page_number = self.request.GET.get('page', 1)
-        page = paginator.get_page(page_number)
-        kwargs['page_obj'] = page
-        kwargs['articles'] = page.object_list
-        kwargs['is_paginated'] = page.has_other_pages()
-        return super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        form = SearchForm
+        user = self.get_object()
+        context['form'] = form
+        context['posts'] = Post.objects.filter(author=user).order_by('-id')
+        return context
 
 
 class UserChangeView(UpdateView):
@@ -82,3 +82,26 @@ class UserChangeView(UpdateView):
 
     def get_success_url(self):
         return reverse('profile', kwargs={'pk': self.object.pk})
+
+
+class SubscribeAddView(View):
+
+    def get(self, request, *args, **kwargs):
+        subscribe = get_object_or_404(Account, pk=kwargs.get('pk'))
+        if request.user in subscribe.subscriptions.all():
+            subscribe.subscriptions.remove(request.user)
+            return redirect('profile', pk=kwargs.get('pk'))
+        subscribe.subscriptions.add(request.user)
+        return redirect('profile', pk=kwargs.get('pk'))
+
+
+class SubscribersView(DetailView):
+    model = get_user_model()
+    template_name = 'subscribers.html'
+    context_object_name = 'accounts'
+
+
+class FollowView(DetailView):
+    model = get_user_model()
+    template_name = 'follows.html'
+    context_object_name = 'accounts'
