@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Search</title>
+{% endblock %}
+
+
+{% block container %}
+    <div class="row justify-content-md-center">
+            <div class="col-6 pt-3 pb-3" id="profile-box">
+
+                <ul class="list-group list-group-flush">
+                    {% for account in accounts %}
+                      <a href="{% url 'profile' account.pk %}" class="text-secondary"><li class="list-group-item"><img class="mr-3 rounded-circle" height="35" width="38" src="{{ account.avatar.url }}" alt="{{ account.username }}">{{ account.username }}</li></a>
+                    {% empty %}
+                        <li class="list-group-item">Пользователи не найдены</li>
+                    {% endfor %}
+                </ul>
+            </div>
+    </div>
+{% endblock %}
