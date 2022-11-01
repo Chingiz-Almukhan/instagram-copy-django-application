@@ -4,7 +4,7 @@ from accounts.views import LoginView, logout_view, RegisterView, ProfileView, Us
     SubscribersView, FollowView
 
 urlpatterns = [
-    path('login/', LoginView.as_view(), name='login'),
+    path('', LoginView.as_view(), name='login'),
     path('register/', RegisterView.as_view(), name='register'),
     path('profile/<int:pk>/', ProfileView.as_view(), name='profile'),
     path('subscribe/<int:pk>', SubscribeAddView.as_view(), name='subscribe'),
