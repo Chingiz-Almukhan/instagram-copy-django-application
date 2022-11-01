@@ -10,13 +10,8 @@
     <div class="container mb-5" style="margin-top: 8em;">
         <div class="row">
             <div class="col-sm-4 d-flex justify-content-center">
-                {% if user.obj.avatar %}
-                <img src="{{ user_obj.avatar.url }}" alt="@{{ user_obj.username }}" class="rounded-circle" width="160px"
-                     height="160px"/>
-                {% else %}
-                <img src="{% static 'img/default-profile.png' %}" alt="@{{ user_obj.username }}" class="rounded-circle" width="160px"
-                     height="160px"/>
-                {% endif %}
+                    <img src="{{ user_obj.avatar.url }}" alt="@{{ user_obj.username }}" class="rounded-circle" width="160px"
+                         height="160px"/>
             </div>
             <div class="col-sm-8">
                 <h2 style="font-weight: 100;">

@@ -27,8 +27,15 @@ class LoginView(TemplateView):
         form = self.form(request.POST)
         if not form.is_valid():
             return redirect('login')
-        email = form.cleaned_data.get('email')
         password = form.cleaned_data.get('password')
+        if '@' not in form.cleaned_data.get('email'):
+            username = form.cleaned_data.get('email')
+            email = Account.objects.filter(username=username).values('email')[0]
+            email_str = email.get('email')
+            user = authenticate(request, email=email_str, password=password)
+            login(request, user)
+            return redirect('main')
+        email = form.cleaned_data.get('email')
         next = form.cleaned_data.get('next')
         user = authenticate(request, email=email, password=password)
         if not user:
@@ -41,7 +48,7 @@ class LoginView(TemplateView):
 
 def logout_view(request):
     logout(request)
-    return redirect('main')
+    return redirect('login')
 
 
 class RegisterView(CreateView):
@@ -70,7 +77,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
         form = SearchForm
         user = self.get_object()
         context['form'] = form
-        context['posts'] = Post.objects.filter(author=user).order_by('-id')
+        context['posts'] = Post.objects.filter(author=user).order_by('-created_at')
         return context
 
 
