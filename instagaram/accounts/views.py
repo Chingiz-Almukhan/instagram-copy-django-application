@@ -34,7 +34,10 @@ class LoginView(TemplateView):
                 return redirect('login')
             email_str = email[0]
             user = authenticate(request, email=email_str.get('email'), password=password)
-            login(request, user)
+            try:
+                login(request, user)
+            except Exception:
+                return redirect('login')
             return redirect('main')
         email = form.cleaned_data.get('email')
         next = form.cleaned_data.get('next')
